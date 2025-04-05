@@ -1,0 +1,87 @@
+
+1. AI for Predicting Problems:
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+import pickle
+
+# Sample device health data (in a real system, this would be collected from sensors)
+data = {
+    'battery_level': [90, 85, 80, 75, 70, 65, 60, 55, 50, 45],
+    'temperature': [30, 32, 35, 38, 40, 42, 45, 48, 50, 52],
+    'cpu_usage': [20, 25, 30, 35, 40, 45, 50, 55, 60, 65],
+    'time_until_failure': [100, 95, 90, 85, 80, 75, 70, 65, 60, 55] # Example: time until battery fails.
+}
+
+df = pd.DataFrame(data)
+
+# Prepare the data
+X = df[['battery_level', 'temperature', 'cpu_usage']]
+y = df['time_until_failure']
+
+# Split the data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a model (Random Forest Regressor)
+model = RandomForestRegressor()
+model.fit(X_train, y_train)
+
+# Save the model
+pickle.dump(model, open('prediction_model.pkl', 'wb'))
+
+# Example prediction
+loaded_model = pickle.load(open('prediction_model.pkl', 'rb'))
+new_data = pd.DataFrame({'battery_level': [68], 'temperature': [41], 'cpu_usage': [43]})
+prediction = loaded_model.predict(new_data)
+print(f"Predicted time until failure: {prediction[0]:.2f} units of time")
+
+
+2. AI for Software Optimization:
+import os
+import shutil
+
+def clean_temp_files():
+    temp_dir = os.environ.get('TEMP')
+    if temp_dir:
+        for filename in os.listdir(temp_dir):
+            file_path = os.path.join(temp_dir, filename)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print(f"Error deleting {file_path}: {e}")
+
+def optimize_system_settings():
+    # This would involve modifying system registry or configuration files
+    # (Requires OS-specific code and careful handling)
+    print("Optimizing system settings...")
+    #Example of a place to add code that would change power settings, or other system settings.
+
+# Example usage
+clean_temp_files()
+optimize_system_settings()
+
+3. AI for Recycling Assistance:
+def analyze_device_components(device_data):
+    # This would involve image recognition and data analysis to identify reusable components
+    reusable_components = []
+    if device_data['screen_quality'] > 0.8:
+        reusable_components.append("screen")
+    if device_data['memory_capacity'] > 4:
+        reusable_components.append("memory")
+    # Add more component analysis logic here
+    return reusable_components
+
+# Example device data
+device_data = {
+    'screen_quality': 0.9,
+    'memory_capacity': 8,
+    'processor_status': 'faulty',
+}
+
+reusable_parts = analyze_device_components(device_data)
+print(f"Reusable components: {reusable_parts}")
+
+
